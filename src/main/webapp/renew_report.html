@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>新建举报</title>
+<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="js/md5.js"></script>
+<script>
+function submit(){
+	var commentId = $("#commentId").val();
+	var displayStatus=$("#displayStatus").val();
+	var postingId=$("#postingId").val();
+	
+	if (displayStatus == "") {
+		alert("请输入显示状态");
+		return;
+	}
+	
+	$.ajax({
+		url : '/backend/webapi/reports/renew_report',
+		type : 'PUT', //
+		/* dataType : "json", */
+		async : true, //或false,是否异步
+		data : {
+			"commentId" : commentId,
+			"displayStatus":displayStatus,
+			"postingId":postingId
+		},
+		success : function(data) {	
+			alert(data.resultMsg);
+		
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+				alert(XMLHttpRequest.status);
+		 	
+		},
+	});
+}
+</script>
+</head>
+<body>
+
+评论id<input type="text" id="commentId"></input><br><br>
+帖子id<input type="text" id="postingId"></input><br><br>
+是否显示<input type="text" id="displayStatus"></input><br><br>
+
+<input type="button" value="提交" onclick="submit();"></input>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+<script>
+function submit(){
+	var title = $("#title").val();
+	var content=$("#content").val();
+	
+	if (title == "") {
+		alert("请输入标题");
+		return;
+	}
+	
+	if (content == "") {
+		alert("请输入内容");
+		return;
+	}
+	
+	$.ajax({
+		url : '/backend/webapi/NewArticle',
+		type : 'POST', //
+		/* dataType : "json", */
+		async : true, //或false,是否异步
+		data : {
+			"title" : title,
+			"content":content
+		},
+		success : function(data) {	
+			alert(data);
+			if(data==1){				
+				alert("发表成功");
+			}
+			if (data==-1) { //根据返回值进行处理        				
+				window.location.href = 'login.jsp';
+			}
+			
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert("false");
+		 	alert(XMLHttpRequest.status);
+		 	if(XMLHttpRequest.status==401){
+		 		window.location.href = 'login.jsp';
+		 	}
+			/* alert(XMLHttpRequest.readyState);
+			alert(textStatus);  */
+		},
+	});
+}
+
+</script>
+</head>
+<body>
+标题<input type="text" id="title"></input><br><br>
+内容<input type="text" id="content"></input>
+<input type="button" value="提交" onclick="submit();"></input>
+
+<form action="/com.cmdc/webapi/NewArticle" method="post">
+<input type="submit" value="去denglu界面"></input>
+</form>
+
+</body>
+</html>

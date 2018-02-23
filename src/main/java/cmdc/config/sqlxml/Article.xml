@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Article">
+
+  <resultMap type="cmdc.bean.Article" id="ArticleResult">
+    <id column="ID" jdbcType="INTEGER" property="id"/>
+    <result column="TITLE" jdbcType="VARCHAR" property="title"/>
+    <result column="CONTENT" jdbcType="LONGVARCHAR" property="content"/>
+    <result column="AUTHOR" jdbcType="VARCHAR" property="author"/>
+  </resultMap>
+  
+  <select id="queryArticleList" resultMap="ArticleResult" parameterType="testJwt.com.cmdc.bean.Article" >
+  select ID,TITLE,CONTENT,AUTHOR from article where 1=1  
+    <if test="title!=null and !&quot;&quot;.equals(title.trim())">
+     and TITLE=#{title}
+    </if>
+    <if test="content!=null and !&quot;&quot;.equals(content.trim())">
+     and CONTENT like '%' #{content} '%'
+    </if> 
+  </select>
+ <insert id="insertArticle" parameterType="cmdc.bean.Article">
+ insert into article(TITLE,CONTENT,AUTHOR) values(#{title}, #{content}, #{author}) 
+ </insert>
+  
+  	<delete id="deleteOne" parameterType="int">
+	delete from ARTICLE where ID=#{_parameter}
+	</delete>
+<!-- 
+  <select id="queryMessageList" parameterType="com.imooc.bean.Message" resultMap="MessageResult">
+    select ID,COMMAND,DESCRIPTION,CONTENT from MESSAGE where 1=1
+    <if test="command!=null and !&quot;&quot;.equals(command.trim())">
+     and COMMAND=#{command}
+    </if>
+    <if test="description!=null and !&quot;&quot;.equals(description.trim())">
+     and DESCRIPTION like '%' #{description} '%'
+    </if>      
+  </select>
+
+	<delete id="deleteOne" parameterType="int">
+	delete from MESSAGE where ID=#{_parameter}
+	</delete>
+	
+	<delete id="deleteBatch" parameterType="java.util.List">
+	delete from MESSAGE where ID in (
+	<foreach collection="list" item="item" separator=",">
+	#{item}
+	</foreach>	
+	)	
+	</delete> -->
+</mapper>
+
+

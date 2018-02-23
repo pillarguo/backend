@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+<script>
+function infopages() {		
+
+	$.ajax({
+				url : '/backend/webapi/informations/pages',
+				type : 'GET', //
+				/* dataType : "json", */
+				async : true, //或false,是否异步	
+				data : {
+					"pageNum" : 2				
+				},
+				success : function(data) {
+					alert(data);
+				
+				},
+				error : function(XMLHttpRequest, textStatus, errorThrown) {
+					alert("false");
+					alert(XMLHttpRequest.status);
+					/* alert(XMLHttpRequest.readyState);
+					alert(textStatus);  */
+				}
+			});
+}
+
+</script>
+</head>
+<body>
+<input type="button" value="查看资讯分页" onclick="infopages()"></input>
+
+</body>
+</html>

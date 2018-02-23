@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+function putadminid(){
+	var cmdcAdminName = $("#cmdcAdminName").val();
+	var phoneNumber=$("#phoneNumber").val();
+	var password=$("#password").val();
+	var roleType=$("#roleType").val();
+	//var createTime=new Date();
+	if (cmdcAdminName == "") {
+		alert("请输入用户名");
+		return;
+	}
+	if (phoneNumber == "") {
+		alert("请输入手机");
+		return;
+	}
+	if (password == "") {
+		alert("请输入密码");
+		return;
+	}
+	if (roleType == "") {
+		alert("请输入角色类型");
+		return;
+	}
+	var admin_id=2;
+	var urlstr='/backend/webapi/admins/'+admin_id;
+	$.ajax({
+		url : urlstr,
+		type : 'PUT', //
+		/* dataType : "json", */
+		async : true, //或false,是否异步
+		data : {
+			"cmdcAdminName" : cmdcAdminName,
+			"phoneNumber":phoneNumber,
+			"password":password,
+			"roleType":roleType
+		},
+		success : function(data) {	
+			
+			if (data.resultCode== "1") { //根据返回值进行处理        
+				alert(data.resultMsg);
+				
+			}				
+					
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert("false");
+		 	if(XMLHttpRequest.status==401){
+		 		window.location.href = 'admin_login.html';
+		 	}
+			/* alert(XMLHttpRequest.readyState);
+			alert(textStatus);  */
+		},
+	});
+}
+
+
+</script>
+</head>
+<body>
+
+	用户名<input type="text" id="cmdcAdminName"></input><br><br>
+	电话<input type="text" id="phoneNumber"></input><br><br>
+密码<input type="text" id="password"></input><br><br>
+角色<input type="text" id="roleType"></input><br><br>
+<input type="button" value="修改id=2的管理员" onclick="putadminid();"></input>
+</body>
+</html>

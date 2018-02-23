@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>查看管理员列表</title>
+
+<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+<script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
+<script type="text/javascript">
+
+function adminlist() {	
+
+	$.ajax({
+				url : '/backend/webapi/admins/admin_list',
+				type : 'GET', //
+				/* dataType : "json", */
+				async : true, //或false,是否异步		
+				success : function(data) {
+					alert(data);
+								
+				},
+				error : function(XMLHttpRequest, textStatus, errorThrown) {
+					alert("false");
+					alert(XMLHttpRequest.status);
+					/* alert(XMLHttpRequest.readyState);
+					alert(textStatus);  */
+				}
+			});
+}
+
+</script>
+</head>
+<body>
+	adminlist
+	<form action="/com.cmdc/Quit" method="post">
+		<input type="submit" value="退出"></input>
+	</form>
+
+<br>
+<hr>
+	<form action="webapi/Quit" method="post">
+		<input type="submit" value="退出"></input>
+	</form>
+	
+	
+<input type="button" value="查看管理员" onclick="adminlist()"></input>
+
+
+
+	
+</body>
+</html>

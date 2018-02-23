@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="js/md5.js"></script>
+<script type="text/javascript">
+window.onload=function()
+{
+    var inputs=document.getElementsByTagName("input");
+    for (var i=0;i<inputs.length; i++) {
+         inputs[i].onkeyup=function(){
+            this.value=this.value.replace(/(^\s+)|\s+$/g,""); 
+         }
+    } 
+}
+function submit(){
+	var cmdcAdminName = $("#cmdcAdminName").val();
+	var phoneNumber=$("#phoneNumber").val();
+	var password=hex_md5($("#password").val());
+	var roleType=$("#roleType").val();
+	//var createTime=new Date();
+	if (cmdcAdminName == "") {
+		alert("请输入用户名");
+		return;
+	}
+	if (phoneNumber == "") {
+		alert("请输入手机");
+		return;
+	}
+	if (password == "") {
+		alert("请输入密码");
+		return;
+	}
+	if (roleType == "") {
+		alert("请输入角色类型");
+		return;
+	}
+	$.ajax({
+		url : '/backend/webapi/admins/new_admin',
+		type : 'POST', //
+		/* dataType : "json", */
+		async : true, //或false,是否异步
+		data : {
+			"cmdcAdminName" : cmdcAdminName,
+			"phoneNumber":phoneNumber,
+			"password":password,
+			"roleType":roleType
+		},
+		success : function(data) {	
+			
+			if (data.resultCode== "1") { //根据返回值进行处理        
+				alert(data.resultMsg);
+				window.location.href = 'index.html';
+			}				
+					
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert("false");
+			alert(XMLHttpRequest.status);
+			if(XMLHttpRequest.status==403){
+		 		alert("没有权限");
+		 	}
+		 	if(XMLHttpRequest.status==401){
+		 		window.location.href = 'login.html';
+		 	}
+			/* alert(XMLHttpRequest.readyState);
+			alert(textStatus);  */
+		},
+	});
+}
+
+
+</script>
+
+</head>
+<body>
+
+	
+	用户名<input type="text" id="cmdcAdminName" name="input"></input><br><br>
+	电话<input type="text" id="phoneNumber"></input><br><br>
+	真实姓名<input type="text" id="realName"></input><br><br>
+密码<input type="text" id="password"></input><br><br>
+角色<input type="text" id="roleType"></input><br><br>
+<input type="button" value="提交" onclick="submit();"></input>
+</body>
+</html>

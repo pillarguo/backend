@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>login</title>
+
+<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="js/md5.js"></script>
+
+<script>
+	function submit() {		
+		var cmdcAdminName = $("#cmdcAdminName").val();
+		var password = $("#password").val();
+		var identify=$("#identify").val();
+		var phoneNumber=$("#phoneNumber").val();
+		if (identify == "") {
+			alert("请输入验证码");
+			return;
+		}
+		
+	
+		if (password == "") {
+			alert("请输入密码");
+			return;
+		}
+		
+		$.ajax({
+			url : '/backend/webapi/admins/admin_login',
+			type : 'POST', //
+			/* dataType : "json", */
+			async : true, //或false,是否异步
+			data : {
+				"phoneNumber":phoneNumber,
+				"cmdcAdminName" : cmdcAdminName,
+				"password" :hex_md5(password),
+				"identify":identify
+			},
+			success : function(data) {
+				alert(data.resultCode);
+				alert(data.resultMsg);			
+				
+				if (data.resultCode== "1") { //根据返回值进行处理        
+					window.location.href = 'admin_list.html';
+				}
+				else{
+					myReload();					
+				}
+				
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+				alert("false");
+				/* alert(XMLHttpRequest.status);
+				alert(XMLHttpRequest.readyState);
+				alert(textStatus); */
+			},
+		});
+
+	}
+
+	//验证码
+	function myReload() {
+		document.getElementById("CreateCheck").src = "webapi/AuthImageServlet?nocache=" + Math.random()*1000;
+	}
+	
+</script>
+
+</head>
+<body>
+
+	登录
+	<br>
+	<hr>
+	<div>
+		用户：<input type="text" name="cmdcAdminName" id="cmdcAdminName"> <br> <br>
+		手机号：<input type="text" name="phoneNumber" id="phoneNumber"> <br> <br>
+		密码：<input type="password" name="password" id="password"> <br>
+		<br>
+		<!-- 验证码 -->
+		<input name="checkCode" type="text" id="identify" title="" size="8" maxlength="4" /> 		
+		<img src="webapi/AuthImageServlet" id="CreateCheck"	align="middle" onclick="myReload();" alt="重新加载" title="看不清,换一个"> 
+		
+		<input type="submit" value="提交" onclick="submit()">
+	</div>
+	
+
+</body>
+</html>

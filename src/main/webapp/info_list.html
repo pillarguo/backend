@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+function infolist() {
+	$.ajax({
+				url : '/backend/webapi/informations/info_list',
+				type : 'GET', //
+				/* dataType : "json", */
+				async : true, //或false,是否异步		
+				success : function(data) {
+					alert(data);
+				
+				},
+				error : function(XMLHttpRequest, textStatus, errorThrown) {
+					alert("false");
+					alert(XMLHttpRequest.status);
+					/* alert(XMLHttpRequest.readyState);
+					alert(textStatus);  */
+				}
+			});
+}
+
+</script>
+
+</head>
+<body>
+
+	
+<input type="button" value="查看资讯" onclick="infolist()"></input>
+
+</body>
+</html>

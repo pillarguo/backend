@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>创建资讯</title>
+<style>
+ @font-face
+{
+	font-family: FZLTXHJW;
+	src: url('defonts/FZLTXHJW.TTF');
+}
+html
+{
+	font-family:FZLTXHJW;
+}
+</style>
+<!--引入wangEditor.css-->
+<link rel="stylesheet" type="text/css" href="css/wangEditor.min.css"></link>
+<script type="text/javascript" src="js/lib/jquery-2.2.1.js"></script>
+<script type="text/javascript" src="js/wangEditor.min.js"></script>
+<script type="text/javascript" src="js/xss.js"></script>
+<script type="text/javascript">
+ $(document).ready(function(){
+     //选择文件成功则提交表单
+     $("#inputfile").change(function(){
+    	 //验证图片格式
+    	 var filepath = $("input[name='myFileName']").val();
+         var extStart = filepath.lastIndexOf(".");
+         var ext = filepath.substring(extStart, filepath.length).toUpperCase();
+         if (ext != ".BMP" && ext != ".PNG" && ext != ".GIF" && ext != ".JPG" && ext != ".JPEG") {
+           alert("图片限于bmp,png,gif,jpeg,jpg格式");
+           return false;
+         } 
+         //图片大小不超过2M
+         var file_size = 0;
+         file_size = this.files[0].size;        
+         if (file_size > 2*1024*1024) {
+            alert("上传的图片大小不能超过2M！");
+            return false;
+         } 
+    	//创建FormData对象
+    	 var data = new FormData();
+    	//为FormData对象添加数据    	        
+    	$.each($('#inputfile')[0].files, function(i, file) {
+    	    data.append('myFileName', file);
+    	}); 
+    	 $.ajax({
+    		 url:'/backend/webapi/upload',
+    		 type:'POST',
+    		data:data,
+    		cache: false,
+    		contentType: false,    //不可缺
+    		processData: false,    //不可缺
+    		success:function(data, textStatus, request){
+    		       if(data.indexOf("error")>=0){
+    		        	 alert(data);
+    		         }  
+    		         else{
+    		        	$("#informationImage").attr("src",data);
+    		        }
+    		    }
+       });
+     })
+ })
+ </script>
+</head>
+<body>
+标题<input type="text" id="informationTitle"  maxlength="20"></input><br><br>
+附属图片<input type="file" name="myFileName"  id="inputfile"/><br> 
+<img id="informationImage"></img><br>
+概要<input type="text" id="informationSummary" maxlength="50"></input><br><br>
+内容<br>
+<div style="width:90%">
+<div id="informationContent" style="height:400px;max-height:500px;"></div>
+</div>
+<p id="count_alert" style="display:none;">内容过长</p>
+<p>剩余字数——<span id="textcount">3000000</span>/3000000</p>  
+显示状态<input type="text" id="displayStatus" maxlength="1"></input><br><br>
+<button onclick="submit()">提交</button>
+
+<script type="text/javascript">
+//生成富文本编辑器
+var editor = new wangEditor('informationContent');
+// 上传图片路径
+editor.config.uploadImgUrl = '/picture/webapi/upload/back';
+editor.config.uploadImgFileName = 'myFileName';
+editor.onchange = function () {
+    console.log(this.$txt.html());
+};
+
+editor.UI.menus.fontsize = {
+        // normal 配置正常状态下显示的UI
+        //normal: '<button style="border:none;background:#FFFFFF;display:block;width:35px; height:35px">字↕</button>', 
+        normal: '<a>字号</a>',
+        //normal: '<button>字</button>',
+        // selected 配置选中状态下的UI，.selected 说明菜单在选中状态下要增加一个 selected class
+        selected: '.selected'
+    };
+//字号
+editor.config.fontsizes = {
+    // 格式：'value': 'title'
+    1: '最小',
+    2: '较小',
+    3: '小',
+    4: '正常',
+    5: '大',
+    6: '较大',
+    7: '最大'
+};
+//取消来往网络图片的功能
+editor.config.hideLinkImg = true;
+editor.config.pasteText = true;
+editor.config.menus = [
+    'head',
+    'bold',
+    'italic',
+    'underline',
+];
+//创建
+editor.create();
+</script>
+<script type="text/javascript">
+//提交资讯内容
+function submit() {		
+	//xss过滤
+	var informationTitle = filterXSS($("#informationTitle").val());
+	var informationImage =$("#informationImage").attr("src");	
+	//xss过滤
+	var informationSummary = filterXSS($("#informationSummary").val());
+	// 获取编辑器区域完整html代码
+	 var informationContent=editor.$txt.html();
+	 if(editor.$txt.html().length>3000000){
+		 alert("您输入的内容过长");
+	 }
+	//xss过滤
+    var informationContent = filterXSS(informationContent);  
+	var displayStatus=$("#displayStatus").val();
+	if (informationTitle == "") {
+		alert("请输入标题");
+		return;
+	}
+	if (informationSummary == "") {
+		alert("请输入概要");
+		return;
+	}	
+	
+	$.ajax({
+		url : '/backend/webapi/informations/new_info',
+		type : 'POST', //		
+		async : true, //或false,是否异步
+		data : {
+			"informationTitle":informationTitle,
+			"informationImage":informationImage,
+			"informationSummary" : informationSummary,
+			"informationContent" :informationContent,
+			"displayStatus":displayStatus
+		},
+		success : function(data, textStatus, request) {
+			alert(data.resultCode);
+			alert(data.resultMsg);
+	
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert("false");
+			 alert(XMLHttpRequest.status);/*
+			alert(XMLHttpRequest.readyState);
+			alert(textStatus); */
+		},
+	});
+
+}
+
+  
+/*字数限制*/  
+$("#informationContent").on("input propertychange", function() { 
+    var text = editor.$txt.html();
+    var count = 3000000 -editor.$txt.html().length;  
+    $("#textcount").text(count);  
+    var count_alert=document.getElementById("count_alert"); 
+    if(count<0){    	 
+    	alert("内容过长")
+    	count_alert.style.display='block';
+    }
+    else{
+    	count_alert.style.display='none';
+    }
+});  
+</script>
+ 
+</body>
+</html>

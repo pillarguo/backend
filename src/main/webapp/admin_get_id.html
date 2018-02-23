@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+function getadminid(){
+	var admin_id=1;
+	var urlstr='/backend/webapi/admins/'+admin_id;
+	$.ajax({
+		url : urlstr,
+		type : 'GET', //
+		/* dataType : "json", */
+		async : true, //或false,是否异步
+		
+		success : function(data) {	
+			alert(data);		
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert("false");
+		 	alert(XMLHttpRequest.status);
+		 	if(XMLHttpRequest.status==401){
+		 		window.location.href = 'admin_login.html';
+		 	}
+			/* alert(XMLHttpRequest.readyState);
+			alert(textStatus);  */
+		},
+	});
+}
+
+</script>
+</head>
+<body>
+<input type="button" value="查看id=1的管理员" onclick="getadminid()"></input>
+</body>
+</html>

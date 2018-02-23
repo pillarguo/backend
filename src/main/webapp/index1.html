@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>主页</title>
+<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+function queryarticle() {		
+		$.ajax({
+					url : '/backend/webapi/ArticleListServlet',
+					type : 'POST', //
+					/* dataType : "json", */
+					async : true, //或false,是否异步		
+					success : function(data) {
+						alert(data);
+						for ( var index in data) {
+							document.getElementById("articleid").innerText = data[index].id;
+							document.getElementById("title").innerText = data[index].title;
+							document.getElementById("content").innerText = data[index].content;
+							document.getElementById("author").innerText = data[index].author;
+							if (index >= 0) {
+								break;
+							}
+							//alert(article.content);
+						}
+					},
+					error : function(XMLHttpRequest, textStatus, errorThrown) {
+						alert("false");
+						alert(XMLHttpRequest.status);
+						/* alert(XMLHttpRequest.readyState);
+						alert(textStatus);  */
+					}
+				});
+	}
+	
+	
+function onDelete(){
+	articleid=document.getElementById("articleid").innerText;
+		$.ajax({
+			url : '/com.cmdc/webapi/DeleteArticle',
+			type : 'DELETE', //
+			/* dataType : "json", */
+			async : true, //或false,是否异步
+			
+			data : {
+				"articleid" : articleid
+				
+			},
+			success : function(data) {
+				alert(data);
+				for ( var index in data) {
+
+					document.getElementById("articleid").innerText = data[index].id;
+					document.getElementById("title").innerText = data[index].title;
+					document.getElementById("content").innerText = data[index].content;
+					document.getElementById("author").innerText = data[index].author;
+					if (index >= 1) {
+						break
+					}
+					
+				}
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+				alert("false");
+				alert(XMLHttpRequest.status);
+				/* alert(XMLHttpRequest.readyState);
+				alert(textStatus);  */
+			},
+		});
+		
+	}
+</script>
+</head>
+<body>
+	这个是主页
+	<br>
+	<form action="/com.cmdc/register.jsp" method="post">
+		<input type="submit" value="注册"></input>
+	</form>
+	<br>
+	<form action="/com.cmdc/login.jsp" method="post">
+		<input type="submit" value="登录"></input>
+	</form>
+	<hr>
+
+	主页
+	<br>
+	<form action="/com.cmdc/other1.jsp" method="post">
+		<input type="submit" value="去other1界面"></input>
+	</form>
+	<form action="/com.cmdc/other2.jsp" method="post">
+		<input type="submit" value="去other2界面"></input>
+	</form>
+	<form action="/com.cmdc/other3.jsp" method="post">
+		<input type="submit" value="去other3界面"></input>
+	</form>
+	<br>
+	<hr>
+
+	<input type="button" value="发新帖"
+		onclick="location.href='/com.cmdc/newarticle.html'"></input>
+	<input type="button" value="看帖子" onclick="queryarticle()"></input>
+	<table>
+		<tbody>
+			<tr>
+				<th>序号</th>
+				<th>帖子标题</th>
+				<th>帖子内容</th>
+				<th>作者</th>
+				<th>操作</th>
+			</tr>
+			<tr>
+				<td id="articleid"></td>
+				<td id="title"></td>
+				<td id="content"></td>
+				<td id="author"></td>
+				<td><a href="#">修改</a>&nbsp;&nbsp;&nbsp; <a
+					href="javascript:void(0);" onclick="onDelete()" >删除</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+</head>
+<body> 
+<script type="text/javascript">
+ $(document).ready(function(){
+     //选择文件成功则提交表单
+     $("#inputfile").change(function(){
+    	 var filepath = $("input[name='myFileName']").val();
+         var extStart = filepath.lastIndexOf(".");
+         var ext = filepath.substring(extStart, filepath.length).toUpperCase();
+         if (ext != ".BMP" && ext != ".PNG" && ext != ".GIF" && ext != ".JPG" && ext != ".JPEG") {
+           alert("图片限于bmp,png,gif,jpeg,jpg格式");
+           return false;
+         } 
+         var file_size = 0;
+         file_size = this.files[0].size;        
+         if (file_size > 2*1024*1024) {
+            alert("上传的图片大小不能超过2M！");
+            return false;
+         } 
+    	//创建FormData对象
+    	         var data = new FormData();
+    	         //为FormData对象添加数据    	        
+    	         $.each($('#inputfile')[0].files, function(i, file) {
+    	              data.append('myFileName', file);
+    	         }); 
+    	 
+    	 $.ajax({
+    		         url:'/backend/webapi/Upload',
+    		         type:'POST',
+    		          data:data,
+    		          cache: false,
+    		        contentType: false,    //不可缺
+    		         processData: false,    //不可缺
+    		           success:function(data){
+    		        	   if(data.indexOf("error")>=0){
+    		        		   alert(data);
+    		        	   }  
+    		        	   else{
+    		        		$("#subPic").attr("value",data);
+    		        	   }
+    		           }
+    		        });
+     })
+ })
+ </script>
+<input type="file" name="myFileName"  id="inputfile"/> 
+<p id="subPic"></p>
+</body>
+</html>

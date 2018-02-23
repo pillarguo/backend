@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+function submit() {	
+
+	$.ajax({
+				url : '/backend/webapi/cmdc_user/pages',
+				type : 'GET', //
+				/* dataType : "json", */
+				async : true, //或false,是否异步	
+				data:{
+					"pageSize":20
+				},
+				success : function(data) {
+					alert(data);
+								
+				},
+				error : function(XMLHttpRequest, textStatus, errorThrown) {
+					alert("false");
+					alert(XMLHttpRequest.status);
+					
+				}
+			});
+}
+
+</script>
+</head>
+<body>
+<input type="button" value="获取用户分页列表" onclick="submit();"></input>
+</body>
+</html>

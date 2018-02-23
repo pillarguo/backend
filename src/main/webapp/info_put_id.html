@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+function putinfoid(){
+	var informationTitle = $("#informationTitle").val();
+	var informationSummary=$("#informationSummary").val();
+	var informationContent=$("#informationContent").val();
+	var displayStatus=$("#displayStatus").val();
+	var cmdcAdminId=$("#cmdcAdminId").val();
+	var info_id=27;
+	var urlstr='/backend/webapi/informations/'+info_id;
+	$.ajax({
+		url : urlstr,
+		type : 'PUT', //
+		/* dataType : "json", */
+		async : true, //或false,是否异步
+		data : {
+			"informationTitle" : informationTitle,
+			"informationSummary":informationSummary,
+			"informationContent":informationContent,
+			"displayStatus":displayStatus,
+			"cmdcAdminId":cmdcAdminId
+		},
+		success : function(data) {	
+			alert(data.resultMsg);
+		
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert("false");
+		 	alert(XMLHttpRequest.status);
+		 	if(XMLHttpRequest.status==401){
+		 		window.location.href = 'admin_login.html';
+		 	}
+			/* alert(XMLHttpRequest.readyState);
+			alert(textStatus);  */
+		},
+	});
+}
+
+</script>
+
+</head>
+<body>
+
+	
+	标题<input type="text" id="informationTitle"></input><br><br>
+	概要<input type="text" id="informationSummary"></input><br><br>
+内容<input type="text" id="informationContent"></input><br><br>
+显示状态<input type="text" id="displayStatus"></input><br><br>
+ 作者<input type="text" id="cmdcAdminId"></input><br><br> 
+<input type="button" value="修改id=27,author=17的资讯" onclick="putinfoid()"></input>
+</body>
+</html>

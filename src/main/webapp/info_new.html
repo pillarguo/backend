@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>新建资讯</title>
+<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+function submit(){
+	var informationTitle = $("#informationTitle").val();
+	var informationSummary=$("#informationSummary").val();
+	var informationContent=$("#informationContent").val();
+	var displayStatus=$("#displayStatus").val();
+	//var createTime=new Date();
+	if (informationTitle == "") {
+		alert("请输入标题");
+		return;
+	}
+	if (informationSummary == "") {
+		alert("请输入摘要");
+		return;
+	}
+	if (informationContent == "") {
+		alert("请输入内容");
+		return;
+	}
+	if (displayStatus == "") {
+		alert("请输入显示状态");
+		return;
+	}
+	$.ajax({
+		url : '/backend/webapi/informations/new_info',
+		type : 'POST', //
+		/* dataType : "json", */
+		async : true, //或false,是否异步
+		data : {
+			"informationTitle" : informationTitle,
+			"informationSummary":informationSummary,
+			"informationContent":informationContent,
+			"displayStatus":displayStatus
+		},
+		success : function(data) {	
+			alert(data);
+		/* 	if(data==10000){				
+				alert("发表成功");
+			}
+			if (data==-1) { //根据返回值进行处理        				
+				window.location.href = 'login.jsp';
+			}
+			 */
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert("false");
+		 	alert(XMLHttpRequest.status);
+		 	if(XMLHttpRequest.status==401){
+		 		window.location.href = 'login.jsp';
+		 	}
+			/* alert(XMLHttpRequest.readyState);
+			alert(textStatus);  */
+		},
+	});
+}
+
+
+</script>
+
+</head>
+<body>
+other3
+
+<br>
+<hr>
+<form action="webapi/Quit" method="post">
+		<input type="submit" value="退出"></input>
+	</form>
+	
+	标题<input type="text" id="informationTitle"></input><br><br>
+	概要<input type="text" id="informationSummary"></input><br><br>
+内容<input type="text" id="informationContent"></input><br><br>
+显示状态<input type="text" id="displayStatus"></input><br><br>
+<input type="button" value="提交" onclick="submit();"></input>
+
+
+</body>
+</html>
